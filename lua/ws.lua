@@ -17,7 +17,6 @@ if not wb then
   return ngx.exit(444)
 end
 
-
 local push = function()
     -- --create redis
     local red = redis:new()
