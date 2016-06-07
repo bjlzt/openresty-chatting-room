@@ -22,16 +22,6 @@ if not wb then
   return ngx.exit(444)
 end
 
--- check access
-if ngx.req.get_headers()['Check-Login'] ~= 'Yes' then
-    wb:send_text('未登录')
-    --wb:send_text(ngx.req.get_headers()['Check-Login'])
-    ngx.log(ngx.ERR, "user not login")
-    return ngx.exit(444)
-end
-
-local nickname = ngx.var.cookie_nickname or '无名氏'
-local uid = ngx.var.cookie_uid
 
 local push = function()
     -- --create redis
@@ -57,7 +47,7 @@ local push = function()
         local res, err = red:read_reply()
         if res then
             local item = res[3]
-            local bytes, err = wb:send_text(nickname.."say: "..item)
+            local bytes, err = wb:send_text(tostring(msg_id)..item)
             if not bytes then
                 -- better error handling
                 ngx.log(ngx.ERR, "failed to send text: ", err)
