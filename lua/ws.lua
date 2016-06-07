@@ -2,7 +2,12 @@
 local server = require "resty.websocket.server"
 local redis = require "resty.redis"
 
-local channel_name = "chat"
+--获取聊天室id
+local len = string.len('/s/')
+local channel_id = string.sub(uri,len+1,-1)
+
+local channel_name = "chat_" .. tostring(channel_id)
+
 local msg_id = 0
 
 --create connection
