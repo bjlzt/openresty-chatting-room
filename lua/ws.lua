@@ -8,8 +8,6 @@ local channel_id = string.sub(uri,len+1,-1)
 
 local channel_name = "chat_" .. tostring(channel_id)
 
-local msg_id = 0
-
 --create connection
 local wb, err = server:new{
   timeout = 10000,
@@ -53,7 +51,6 @@ local push = function()
                 ngx.log(ngx.ERR, "failed to send text: ", err)
                 return ngx.exit(444)
             end
-            msg_id = msg_id + 1
         end
     end
 end
