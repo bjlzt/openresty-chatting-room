@@ -1,0 +1,72 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
+</head>
+<body>
+<script type="text/javascript">
+    var ws = null;
+
+    function WebSocketConn() {
+        if (ws != null && ws.readyState == 1) {
+            log("已经在线");
+            return
+        }
+
+        if ("WebSocket" in window) {
+            // Let us open a web socket
+            ws = new WebSocket("ws://localhost:8888/sredis");
+
+            ws.onopen = function() {
+                log('成功进入聊天室');
+            };
+
+            ws.onmessage = function(event) {
+                log(event.data)
+            };
+
+            ws.onclose = function() {
+                // websocket is closed.
+                log("已经和服务器断开");
+            };
+
+            ws.onerror = function(event) {
+                console.log("error " + event.data);
+            };
+        } else {
+            // The browser doesn't support WebSocket
+            alert("WebSocket NOT supported by your Browser!");
+        }
+    }
+
+    function SendMsg() {
+        if (ws != null && ws.readyState == 1) {
+            var msg = document.getElementById('msgtext').value;
+            ws.send(msg);
+        } else {
+            log('请先进入聊天室');
+        }
+    }
+
+    function WebSocketClose() {
+        if (ws != null && ws.readyState == 1) {
+            ws.close();
+            log("发送断开服务器请求");
+        } else {
+            log("当前没有连接服务器")
+        }
+    }
+
+    function log(text) {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(text));
+        document.getElementById('log').appendChild(li);
+        return false;
+    }
+    </script>
+<div id="sse"><code class="language-html hljs "><a href="#" onclick="WebSocketConn();">进入聊天室</a> &nbsp; <a href="#" onclick="WebSocketClose();">离开聊天室</a><br />
+<br />
+<input id="msgtext" type="text" /><br />
+<a href="#" onclick="SendMsg();">发送信息</a><br />
+<ol id="log"></ol>
+</div>
+</body>
