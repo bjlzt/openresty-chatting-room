@@ -22,6 +22,14 @@ if not wb then
   return ngx.exit(444)
 end
 
+-- check access
+if ngx.req.get_headers()['Check-Login'] ~= 'Yes' then
+    wb:send_text('未登录')
+    --wb:send_text(ngx.req.get_headers()['Check-Login'])
+    ngx.log(ngx.ERR, "user not login")
+    return ngx.exit(444)
+end
+
 local push = function()
     -- --create redis
     local red = redis:new()
