@@ -30,6 +30,9 @@ if ngx.req.get_headers()['Check-Login'] ~= 'Yes' then
     return ngx.exit(444)
 end
 
+local nickname = ngx.var.cookie_nickname or '无名氏'
+local uid = ngx.var.cookie_uid
+
 local push = function()
     -- --create redis
     local red = redis:new()
@@ -54,7 +57,7 @@ local push = function()
         local res, err = red:read_reply()
         if res then
             local item = res[3]
-            local bytes, err = wb:send_text(tostring(msg_id).." "..item)
+            local bytes, err = wb:send_text(nickname.."say: "..item)
             if not bytes then
                 -- better error handling
                 ngx.log(ngx.ERR, "failed to send text: ", err)
